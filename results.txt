@@ -1,0 +1,2 @@
+{'blue': 'aqua', 'red': 'silver', 'winner': 'silver'}
+{'blue': 'blue', 'red': 'aqua', 'winner': 'aqua'}
