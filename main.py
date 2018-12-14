@@ -9,6 +9,8 @@ import json
 import pickle
 import time
 import random
+import os
+import datetime
 
 import isolation
 
@@ -75,7 +77,7 @@ def generate_matches(agent_classes):
     pickle_file.close()
 
 
-def run_tournament(agent_classes, start_match_index=0):
+def run_tournament(agent_classes, start_match_index=0, tournament_run_count=1, debug=False):
     """
     Play a bunch of matches between the teams listed in teams
     :param agent_classes: a dictionary of player classes
@@ -94,39 +96,41 @@ def run_tournament(agent_classes, start_match_index=0):
     wins = {team: 0 for team in agent_classes}
 
     results = []
+    for i in range(tournament_run_count):
+        for team1, team2 in pairings[start_match_index:]:
+            # Flip a coin to see who goes first
+            if random.choice(('H', 'T')) == 'H':
+                blue_player = agent_classes[team1](team1, isolation.Board.BLUE_TOKEN)
+                red_player = agent_classes[team2](team2, isolation.Board.RED_TOKEN)
+            else:
+                blue_player = agent_classes[team2](team2, isolation.Board.BLUE_TOKEN)
+                red_player = agent_classes[team1](team1, isolation.Board.RED_TOKEN)
 
-    for team1, team2 in pairings[start_match_index:]:
-        # Flip a coin to see who goes first
-        if random.choice(('H', 'T')) == 'H':
-            blue_player = agent_classes[team1](team1, isolation.Board.BLUE_TOKEN)
-            red_player = agent_classes[team2](team2, isolation.Board.RED_TOKEN)
-        else:
-            blue_player = agent_classes[team2](team2, isolation.Board.BLUE_TOKEN)
-            red_player = agent_classes[team1](team1, isolation.Board.RED_TOKEN)
+            board = isolation.Board()
+            match = isolation.Match(blue_player, red_player, board)
 
-        board = isolation.Board()
-        match = isolation.Match(blue_player, red_player, board)
+            match.start_play()
 
-        match.start_play()
+            wins[match.winner().name()] += 1
 
-        wins[match.winner().name()] += 1
+            results.append({'blue': blue_player.name(),
+                            'red': red_player.name(), 'winner': match.winner().name()})
 
-        results.append({'blue': blue_player.name(),
-                        'red': red_player.name(), 'winner': match.winner().name()})
+            moves = board.moves()
+            filename = f'{blue_player.name()}_{red_player.name()}.txt'
+            with open(filename, 'w') as log_file:
+                print('\n'.join(str(move) for move in moves), file=log_file)
 
-        moves = board.moves()
-        filename = f'{blue_player.name()}_{red_player.name()}.txt'
-        with open(filename, 'w') as log_file:
-            print('\n'.join(str(move) for move in moves), file=log_file)
+            with open('results.txt', 'w') as results_file:
+                print('\n'.join(str(result) for result in results), file=results_file)
 
-        with open('results.txt', 'w') as results_file:
-            print('\n'.join(str(result) for result in results), file=results_file)
-
-
-        input('Hit RETURN to continue')
+            if debug:
+                input('Hit RETURN to continue')
 
 
 if __name__ == '__main__':
+    if os.path.isfile('results.txt'):
+        os.rename('results.txt', 'results.txt' + str(datetime.datetime.now()).replace(':', '_').replace('/', '-'))
     isolation.Board.set_dimensions(6, 8)
 
     agent_classes = {
@@ -141,8 +145,8 @@ if __name__ == '__main__':
     }
 
     # generate_matches(agent_classes)
-
-    run_tournament(agent_classes)
+    tournament_run_count = 1
+    run_tournament(agent_classes, tournament_run_count=tournament_run_count)
 
     win_tallies = {
         'aqua': 0,
@@ -156,11 +160,10 @@ if __name__ == '__main__':
     }
 
     with open('results.txt', 'r') as results_file:
-
         for line in results_file:
             win = eval(line)
             win_tallies[win['winner']] += 1
             print('Player 1:', win['blue'], 'Player 2', win['red'], 'Winner: ', win['winner'])
 
     for player, tallies in win_tallies.items():
-        print(player, ':', tallies)
+        print(player + ':', tallies, '/', tournament_run_count)
