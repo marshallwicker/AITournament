@@ -118,7 +118,10 @@ def run_tournament(agent_classes, start_match_index=0, tournament_run_count=1, d
 
             moves = board.moves()
             filename = f'{blue_player.name()}_{red_player.name()}.txt'
-            with open(filename, 'w') as log_file:
+
+            if not os.path.isdir('Matches'):
+                os.mkdir('Matches')
+            with open('Matches/' + filename, 'w') as log_file:
                 print('\n'.join(str(move) for move in moves), file=log_file)
 
             with open('results.txt', 'w') as results_file:
@@ -130,7 +133,7 @@ def run_tournament(agent_classes, start_match_index=0, tournament_run_count=1, d
 
 if __name__ == '__main__':
     if os.path.isfile('results.txt'):
-        os.rename('results.txt', 'results.txt' + str(datetime.datetime.now()).replace(':', '_').replace('/', '-'))
+        os.rename('results.txt', 'results_' + str(datetime.datetime.now()).replace(':', '_').replace('/', '-') + '.txt')
     isolation.Board.set_dimensions(6, 8)
 
     agent_classes = {

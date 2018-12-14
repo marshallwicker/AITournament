@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import math
 import sys
 import datetime
+import os
 
 
 @dataclass(frozen=True)
@@ -540,7 +541,9 @@ class Match:
         :param filename: a string giving a file name
         :return: None
         """
-        with open(filename, 'w') as csv_file:
+        if not os.path.isdir('GameCSVs'):
+            os.mkdir('GameCSVs')
+        with open('GameCSVs/' + filename, 'w') as csv_file:
             print('token,move,push,win', file=csv_file)
             tokens = ('red', 'blue')
             moves = self.moves()
