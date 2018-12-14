@@ -162,30 +162,30 @@ class PlayerAgent(isolation.Player):
 
             print("LATE GAME")
             # Move to neighbor tile with the most neighbors
-            # space_id = board.token_location(self._token)
-            # possible_moves = board.neighbor_tiles(space_id)
-            # to_space_id = random.choice(list(possible_moves))
-            # for move in possible_moves:
-            #     if len(board.neighbor_tiles(move)) > len(board.neighbor_tiles(to_space_id)):
-            #         to_space_id = move
+            space_id = board.token_location(self._token)
+            possible_moves = board.neighbor_tiles(space_id)
+            to_space_id = random.choice(list(possible_moves))
+            for move in possible_moves:
+                if len(board.neighbor_tiles(move)) > len(board.neighbor_tiles(to_space_id)):
+                    to_space_id = move
 
             # Move to the neighbor tile with the neighbor that has the most neighbors
-            space_id = board.token_location(self._token)
-            tiles_two_away = set(board.squares_at_radius(space_id, 2))
-            pushed_out = set(board.pushed_out_square_ids())
-            moveable_tiles_two = set()
-            for tile in tiles_two_away:
-                if tile not in pushed_out:
-                    moveable_tiles_two.add(tile)
-            if len(moveable_tiles_two) == 0:
-                moveable_tiles_two = set(board.neighbor_tiles(space_id))
-            best_tile = random.choice(list(moveable_tiles_two))
-            for tile in moveable_tiles_two:
-                if len(board.neighbor_tiles(tile)) > len(board.neighbor_tiles(best_tile)):
-                    best_tile = tile
-
-            path = bfs_shortest_path(board, space_id, best_tile)
-            to_space_id = path[1]
+            # space_id = board.token_location(self._token)
+            # tiles_two_away = set(board.squares_at_radius(space_id, 2))
+            # pushed_out = set(board.pushed_out_square_ids())
+            # moveable_tiles_two = set()
+            # for tile in tiles_two_away:
+            #     if tile not in pushed_out:
+            #         moveable_tiles_two.add(tile)
+            # if len(moveable_tiles_two) == 0:
+            #     moveable_tiles_two = set(board.neighbor_tiles(space_id))
+            # best_tile = random.choice(list(moveable_tiles_two))
+            # for tile in moveable_tiles_two:
+            #     if len(board.neighbor_tiles(tile)) > len(board.neighbor_tiles(best_tile)):
+            #         best_tile = tile
+            #
+            # path = bfs_shortest_path(board, space_id, best_tile)
+            # to_space_id = path[1]
 
             # Remove best_move from tiles you can push out
             # Add space_id to tiles you can push out

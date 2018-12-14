@@ -75,7 +75,7 @@ def generate_matches(agent_classes):
     pickle_file.close()
 
 
-def run_tournament(agent_classes):
+def run_tournament(agent_classes, start_match_index=0):
     """
     Play a bunch of matches between the teams listed in teams
     :param agent_classes: a dictionary of player classes
@@ -95,7 +95,7 @@ def run_tournament(agent_classes):
 
     results = []
 
-    for team1, team2 in pairings:
+    for team1, team2 in pairings[start_match_index:]:
         # Flip a coin to see who goes first
         if random.choice(('H', 'T')) == 'H':
             blue_player = agent_classes[team1](team1, isolation.Board.BLUE_TOKEN)
@@ -143,3 +143,24 @@ if __name__ == '__main__':
     # generate_matches(agent_classes)
 
     run_tournament(agent_classes)
+
+    win_tallies = {
+        'aqua': 0,
+        'silver': 0,
+        'blue': 0,
+        'fuchsia': 0,
+        'lime': 0,
+        'maroon': 0,
+        'olive': 0,
+        'teal': 0
+    }
+
+    with open('results.txt', 'r') as results_file:
+
+        for line in results_file:
+            win = eval(line)
+            win_tallies[win['winner']] += 1
+            print('Player 1:', win['blue'], 'Player 2', win['red'], 'Winner: ', win['winner'])
+
+    for player, tallies in win_tallies.items():
+        print(player, ':', tallies)
