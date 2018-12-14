@@ -156,6 +156,16 @@ if __name__ == '__main__':
     generate_matches(agent_classes)
     run_tournament(agent_classes, tournament_run_count=tournament_run_count)
 
+    match_tallies = {
+        'aqua': 0,
+        'silver': 0,
+        'blue': 0,
+        'fuchsia': 0,
+        'lime': 0,
+        'maroon': 0,
+        'olive': 0,
+        'teal': 0
+    }
     win_tallies = {
         'aqua': 0,
         'silver': 0,
@@ -167,12 +177,17 @@ if __name__ == '__main__':
         'teal': 0
     }
 
+    games_run = 0
     with open('results.txt', 'r') as results_file:
         for line in results_file:
             win = eval(line)
+            games_run += 1
+            match_tallies[win['blue']] += 1
+            match_tallies[win['red']] += 1
             win_tallies[win['winner']] += 1
-            print('Player 1:', win['blue'], 'Player 2', win['red'], 'Winner: ', win['winner'])
 
-    games_run = tournament_run_count * 56
+            # print('Player 1:', win['blue'], 'Player 2', win['red'], 'Winner: ', win['winner'])
+
     for player, tallies in win_tallies.items():
-        print(player + ':', tallies, '/', games_run, '=', "{:.0%}".format(tallies / games_run))
+        print(player + ':', tallies, '/', match_tallies[player], '=', "{:.0%}".format(tallies / match_tallies[player]))
+
