@@ -81,6 +81,9 @@ def generate_matches(agent_classes):
 def run_tournament(agent_classes, start_match_index=0, tournament_run_count=1, debug=False):
     """
     Play a bunch of matches between the teams listed in teams
+    :param debug: if set to true, it requires user input before going to the next match
+    :param tournament_run_count: specifies how many tournaments to run
+    :param start_match_index: if the code breaks, you can choose where to start
     :param agent_classes: a dictionary of player classes
     :return:
     """
