@@ -11,6 +11,7 @@ import time
 import random
 import os
 import datetime
+import sys
 
 import isolation
 
@@ -146,9 +147,10 @@ if __name__ == '__main__':
         'olive': olive.PlayerAgent,
         'teal': teal.PlayerAgent,
     }
-
-    # generate_matches(agent_classes)
     tournament_run_count = 1
+    if len(sys.argv) > 1:
+        tournament_run_count = int(sys.argv[1])
+    generate_matches(agent_classes)
     run_tournament(agent_classes, tournament_run_count=tournament_run_count)
 
     win_tallies = {
@@ -168,5 +170,6 @@ if __name__ == '__main__':
             win_tallies[win['winner']] += 1
             print('Player 1:', win['blue'], 'Player 2', win['red'], 'Winner: ', win['winner'])
 
+    games_run = tournament_run_count * 56
     for player, tallies in win_tallies.items():
-        print(player + ':', tallies, '/', tournament_run_count)
+        print(player + ':', tallies, '/', games_run, '=', round(tallies / games_run, 2))
