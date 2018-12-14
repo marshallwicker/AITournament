@@ -46,7 +46,7 @@ def print_results(filename='results.txt'):
     print('-' * line_length)
     print('OVERALL TOURNAMENT DATA'.center(line_length))
     print('-' * line_length)
-    format_string = '{:>7}: {:>4} / {:>4} = {:.2%}'
+    format_string = '{:>7}: {:>5} / {:>5} = {:.2%}'
     for player, tallies in win_tallies.items():
         overall_wins = tallies[0]
         overall_matches_played = match_tallies[player][0]
