@@ -175,4 +175,4 @@ if __name__ == '__main__':
 
     games_run = tournament_run_count * 56
     for player, tallies in win_tallies.items():
-        print(player + ':', tallies, '/', games_run, '=', round(tallies / games_run, 2))
+        print(player + ':', tallies, '/', games_run, '=', "{:.0%}".format(tallies / games_run))
