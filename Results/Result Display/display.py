@@ -1,4 +1,6 @@
 from copy import deepcopy
+import datetime
+import csv
 
 
 def print_results(filename='results.txt'):
@@ -47,27 +49,39 @@ def print_results(filename='results.txt'):
     print('OVERALL TOURNAMENT DATA'.center(line_length))
     print('-' * line_length)
     format_string = '{:>7}: {:>5} / {:>5} = {:.2%}'
+    now = str(datetime.datetime.now()).replace(':', '_').replace('/', '-') + '.csv'
+    csv_file = open('overall_results' + now, 'w')
+    csv_writer = csv.writer(csv_file)
     for player, tallies in win_tallies.items():
         overall_wins = tallies[0]
         overall_matches_played = match_tallies[player][0]
         overall_win_percentage = overall_wins / overall_matches_played
+        csv_writer.writerow([player, overall_wins, overall_matches_played, overall_win_percentage])
         print(format_string.format(player.upper(), overall_wins, overall_matches_played, overall_win_percentage))
-
+    csv_file.close()
     print('-' * line_length)
     print()
     print('-' * line_length)
     print('INDIVIDUAL MATCH-UP DATA'.center(line_length))
     print('-' * line_length)
+    csv_file = open('individual_results' + now, 'w')
+    csv_writer = csv.writer(csv_file)
     for player, tallies in win_tallies.items():
+        csv_list = []
         print()
         print('{:^29}'.format(player.upper()))
+        csv_list.append(player.upper())
         print('-' * line_length)
         for vs_player, wins_against_player in win_tallies[player][1].items():
             if vs_player != player:
                 matches_against_player = match_tallies[player][1][vs_player]
                 win_percentage_against_player = wins_against_player / matches_against_player
+                csv_list.append(wins_against_player)
+                csv_list.append(matches_against_player)
                 print(format_string.format(vs_player.upper(), wins_against_player,
                                            matches_against_player, win_percentage_against_player))
+        csv_writer.writerow(csv_list)
+    csv_file.close()
 
 
 if __name__ == '__main__':

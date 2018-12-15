@@ -26,18 +26,6 @@ class PlayerAgent(isolation.Player):
         move = isolation.Move(to_square_id=move_to, pushout_square_id=knockout_id)
         return move
 
-    def calculate_move(self, board):
-
-        my_possible_moves = board.neighbor_tiles(board.token_location(self.token())) - board.tile_square_ids()
-        other_agent_possible_moves = board.neighbor_tiles(board.token_location(self.OTHER_PLAYER_TOKEN))
-        if self.__earlyStrategy:
-            current_tile_location = board.token_location(self.token())
-            current_quadrant = self.BOARD_QUADRANTS[current_tile_location]
-            if self.BOARD_CENTER_SQUARES[current_quadrant] in board.pushed_out_square_ids():
-                return choice(list(my_possible_moves))
-        else:
-            return choice(list(my_possible_moves))
-
     def find_knockout_square(self, board, move_to_square):
 
         myLocation = board.token_location(self.token())
@@ -101,7 +89,7 @@ class PlayerAgent(isolation.Player):
 
         pushedOut = board.pushed_out_square_ids()
         otherPlayerLocation = {board.token_location(self.OTHER_PLAYER_TOKEN)}
-        pushedOutTiles =  pushedOut
+        pushedOutTiles = pushedOut
 
         self.getNextTargetLocation(board)
 
@@ -167,7 +155,7 @@ if __name__ == '__main__':
         ref = isolation.Match(RandomPlayer('Blue', isolation.Board.BLUE_TOKEN),
                               PlayerAgent('Red', isolation.Board.RED_TOKEN),
                               isolation.Board())
-        ref.start_play(debug=False)
+        ref.start_play()
 
         if ref.winner() is None:
             continue

@@ -140,6 +140,7 @@ class PlayerAgent(isolation.Player):
         print('   ', move)
         return move
 
+
 if __name__ == '__main__':
     # Create a match
     isolation.Board.set_dimensions(6, 8)
